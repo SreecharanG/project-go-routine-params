@@ -82,8 +82,7 @@ Example:
     close(w.in)
   <- w.done
   }
-
-
+  ```
 
   
   
