@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"time"
+	"strings"
 )
 
 
@@ -77,8 +78,47 @@ func forSelectChannelAnotherMethod() {
 	// Done Channel will helps to stop the go routines. 
 }
 
+// If go routine will happen it called go routine leak 
+// Done channel will help to stop the go routine leak 
 
+func doneChannelForSelectChannel(done <-chan bool) {
+	go func() {
+		for {
+			select {
+			case <-done:
+				return
+			default:
+				fmt.Println("Do Work")
+			}
+		}
+	}()
+}
 
+// spinners for displaying fib value
+
+func spinner(delay time.Duration) {
+    for i := 0; i < 20; i++ {
+		bar := fmt.Sprintf("[%s%s]", strings.Repeat("=", i), strings.Repeat(" ", 20-i))
+		fmt.Printf("\r%s", bar)
+		time.Sleep(200 * time.Millisecond)
+	}
+}
+
+func fib(x int) int {
+    if x < 2 {
+        return x
+    }
+    return fib(x-1) + fib(x-2)
+}
+
+func returnfibNum() {
+	go spinner(100 * time.Millisecond)
+    const n = 45
+    fibN := fib(n) // slow
+    fmt.Printf("\rFibonacci(%d) = %d\n", n, fibN)
+}
+
+// Echo config
 
 
 func main() {
@@ -99,4 +139,12 @@ func main() {
 	// forSelectChannel()
 	// forSelectChannelAnotherMethod()
 
+	// Done Channel
+
+	// done := make(chan bool)
+	// go doneChannelForSelectChannel(done)
+	// time.Sleep(time.Second * 3)
+	// close(done)
+
+	
 }
